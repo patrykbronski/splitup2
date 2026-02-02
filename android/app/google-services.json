@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "360679129146",
+    "project_id": "bazasplitup",
+    "storage_bucket": "bazasplitup.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360679129146:android:15210d42a2c712b8f77503",
+        "android_client_info": {
+          "package_name": "com.company.splitup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmNdEYtaeZg7Kk0mZWCXgZfKHcquPYUM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360679129146:android:7f81a72c9b3f795df77503",
+        "android_client_info": {
+          "package_name": "com.example.splitup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmNdEYtaeZg7Kk0mZWCXgZfKHcquPYUM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
