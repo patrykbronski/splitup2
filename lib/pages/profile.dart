@@ -1,120 +1,232 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            _ProfileHeader(),
-            SizedBox(height: 24),
-            // _SectionTitle(title: 'Ustawienia'),
-            // SizedBox(height: 8),
-            _ProfileTile(
-              icon: Icons.person,
-              title: 'Dane konta',
-              subtitle: 'Imię, zdjęcie, nr konta/tel.',
-            ),
-            _ProfileTile(
-              icon: Icons.info_outline,
-              title: 'O aplikacji',
-              subtitle: 'Dowiedz się jak działa apka',
-            ),
-            SizedBox(height: 16),
-            _LogoutButton(),
-          ],
-        ),
-      ),
-    );
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Wylogowano')));
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Błąd wylogowania: $e')));
+    }
   }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    final cs = Theme.of(context).colorScheme;
+
+    return Stack(
       children: [
-        const CircleAvatar(radius: 32, child: Icon(Icons.person, size: 32)),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Patryk',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'patrykbronski@tlen.pl',
-                style: TextStyle(color: Colors.black54),
-              ),
-            ],
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _ProfileTopRow(),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _GrayActionButton(
+                        title: 'ZMIEŃ ZDJĘCIE',
+                        icon: Icons.photo_camera,
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Zmień zdjęcie – do zrobienia'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _GrayActionButton(
+                        title: 'EDYTUJ DANE',
+                        icon: Icons.edit,
+                        onTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Edytuj dane – do zrobienia'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 60),
+                _LogoutButton(onTap: () => _signOut(context)),
+              ],
+            ),
           ),
         ),
-        // const Icon(Icons.edit),
+
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 180,
+          child: Center(
+            child: Text(
+              'mail_konta_z_bazy@wp.pl',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w900,
+                color: cs.onSurface,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
 
-class _ProfileTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
+class _ProfileTopRow extends StatelessWidget {
+  const _ProfileTopRow();
 
-  const _ProfileTile({
-    required this.icon,
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          radius: 44,
+          backgroundColor: cs.surfaceContainerHighest,
+          child: Icon(Icons.person, size: 40, color: cs.onSurface),
+        ),
+        const SizedBox(width: 16),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _InfoLine(text: 'imię/ksywa'),
+              SizedBox(height: 6),
+              _InfoLine(text: 'nr tel.'),
+              SizedBox(height: 6),
+              _InfoLine(text: 'nr konta'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _InfoLine extends StatelessWidget {
+  final String text;
+
+  const _InfoLine({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+        fontWeight: FontWeight.w700,
+        color: cs.onSurface,
+      ),
+    );
+  }
+}
+
+class _GrayActionButton extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _GrayActionButton({
     required this.title,
-    required this.subtitle,
+    required this.icon,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.only(bottom: 10),
-      clipBehavior: Clip
-          .antiAlias, //dopasowuje krawędzie efektu kliknięcia do kształtu przycisku
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Colors.black12),
-      ),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          // na razie puste; później tu dasz nawigację do podstron
-        },
+    final cs = Theme.of(context).colorScheme;
+
+    return Material(
+      color: cs.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 18, color: cs.onSurface),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.2,
+                    color: cs.onSurface,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
 class _LogoutButton extends StatelessWidget {
-  const _LogoutButton();
+  final VoidCallback onTap;
+
+  const _LogoutButton({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: () {
-        // później: wylogowanie (Firebase / SharedPreferences)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Wylogowanie - do zrobienia')),
-        );
-      },
-      icon: const Icon(Icons.logout),
-      label: const Text('Wyloguj'),
+    final cs = Theme.of(context).colorScheme;
+
+    return Material(
+      color: cs.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(14),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.logout, size: 18, color: cs.error),
+              const SizedBox(width: 10),
+              Text(
+                'WYLOGUJ',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.4,
+                  color: cs.error,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

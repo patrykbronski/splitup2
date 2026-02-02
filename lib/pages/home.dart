@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'join.dart';
-import 'groups.dart';
 import 'bills.dart';
+import 'groups.dart';
+import 'join.dart';
 import 'profile.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,54 +24,68 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final radius = BorderRadius.circular(20);
+
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10, top: 10),
-          child: const Text(
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10, top: 10),
+          child: Text(
             'splitUp',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        // backgroundColor: Colors.green,
-        elevation: 0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 20, top: 10),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                setState(() {
-                  _index = 0; // przejście do Profilu
-                });
-              },
-              child: Row(
-                children: const [
-                  Text(
-                    'Patryk',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                    ),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: radius,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                borderRadius: radius,
+                onTap: () => setState(() => _index = 0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
                   ),
-                  SizedBox(width: 8),
-                  CircleAvatar(radius: 16, child: Icon(Icons.person, size: 18)),
-                ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Patryk',
+                        style: TextStyle(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: cs.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.person,
+                          size: 18,
+                          color: cs.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ],
       ),
-
       body: _pages[_index],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _index,
         onTap: (newIndex) => setState(() => _index = newIndex),
+        selectedItemColor: cs.primary,
+        unselectedItemColor: cs.onSurface.withOpacity(0.65),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           BottomNavigationBarItem(

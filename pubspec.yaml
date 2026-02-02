@@ -38,6 +38,8 @@ dependencies:
   # Firebase core – wymagane zawsze
   firebase_core: ^4.3.0
 
+  firebase_auth: ^6.1.3
+
   # Cloud Firestore – baza danych
   cloud_firestore: ^6.1.1
 
