@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import '../groups/create_group_page.dart';
+import 'join_by_code_page.dart';
 
 class JoinPage extends StatelessWidget {
   const JoinPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40.0),
@@ -17,8 +17,8 @@ class JoinPage extends StatelessWidget {
               title: 'STWÓRZ GRUPĘ',
               icon: Icons.add,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Stwórz grupę – do zrobienia')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const CreateGroupPage()),
                 );
               },
             ),
@@ -27,8 +27,8 @@ class JoinPage extends StatelessWidget {
               title: 'DOŁĄCZ',
               icon: Icons.group_add,
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Dołącz – do zrobienia')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const JoinByCodePage()),
                 );
               },
             ),
@@ -61,7 +61,7 @@ class _GrayActionButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap, // wywołanie callbacka przekazanego z JoinPage
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             child: Row(
