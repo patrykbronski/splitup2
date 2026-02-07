@@ -27,8 +27,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
   }
 
   Future<String> _createUniqueCode() async {
-    // zostawiamy query + limit(1), bo masz pod to rules
-    // i to działa nawet gdy użytkownik nie jest członkiem cudzych grup
     for (int i = 0; i < 30; i++) {
       final code = _genCode4();
       final snap = await FirebaseFirestore.instance
